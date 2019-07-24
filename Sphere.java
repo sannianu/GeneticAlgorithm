@@ -1,9 +1,18 @@
 package benchmarkFunction;
-import static java.lang.Math.PI;
-import static java.lang.Math.cos;
+import io.jenetics.DoubleGene;
+import io.jenetics.MeanAlterer;
+import io.jenetics.Mutator;
+import io.jenetics.Optimize;
+import io.jenetics.Phenotype;
+import io.jenetics.engine.Codecs;
+import io.jenetics.engine.Engine;
+import static io.jenetics.engine.EvolutionResult.toBestPhenotype;
+import io.jenetics.engine.EvolutionStatistics;
+import static io.jenetics.engine.Limits.bySteadyFitness;
+import io.jenetics.util.DoubleRange;
+
 import static io.jenetics.engine.EvolutionResult.toBestPhenotype;
 import static io.jenetics.engine.Limits.bySteadyFitness;
-
 import io.jenetics.DoubleGene;
 import io.jenetics.MeanAlterer;
 import io.jenetics.Mutator;
@@ -14,24 +23,25 @@ import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionStatistics;
 import io.jenetics.util.DoubleRange;
 
-public class RastriginFunction {
+public class Sphere {
 	private static final double A = 10;
 	private static final double R = 5.12;
-	private static final int N = 2;
+	private static final int N = 12;
 
 	private static double fitness(final double[] x) {
-		double value = A*N;
+		
+		double value = 0.0;
 		for (int i = 0; i < N; ++i) {
-			value += x[i]*x[i] - A*cos(2.0*PI*x[i]);
-		}
-
-		return value;
-	}
+                value += x[i] * x[i];
+		//return value;
+                }
+                return value;
+        }
 
 	public static void main(final String[] args) {
 		final Engine<DoubleGene, Double> engine = Engine
 			.builder(
-				RastriginFunction::fitness,
+                                Sphere::fitness,
 				// Codec for 'x' vector.
 				Codecs.ofVector(DoubleRange.of(-R, R), N))
 			.populationSize(500)
@@ -53,4 +63,3 @@ public class RastriginFunction {
 		System.out.println(best);
 	}
 }
-///bhbbbbbbbbbbbbh

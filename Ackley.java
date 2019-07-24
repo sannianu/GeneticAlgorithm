@@ -1,9 +1,4 @@
 package benchmarkFunction;
-import static java.lang.Math.PI;
-import static java.lang.Math.cos;
-import static io.jenetics.engine.EvolutionResult.toBestPhenotype;
-import static io.jenetics.engine.Limits.bySteadyFitness;
-
 import io.jenetics.DoubleGene;
 import io.jenetics.MeanAlterer;
 import io.jenetics.Mutator;
@@ -11,27 +6,52 @@ import io.jenetics.Optimize;
 import io.jenetics.Phenotype;
 import io.jenetics.engine.Codecs;
 import io.jenetics.engine.Engine;
+import static io.jenetics.engine.EvolutionResult.toBestPhenotype;
 import io.jenetics.engine.EvolutionStatistics;
+import static io.jenetics.engine.Limits.bySteadyFitness;
 import io.jenetics.util.DoubleRange;
+import libs.Point;
 
-public class RastriginFunction {
+public class Ackley implements Functions {
+	//Declaration of Variables
+	private int a;
+	private double b;
+	private double c;
+	private double d;
+          //
+
 	private static final double A = 10;
-	private static final double R = 5.12;
-	private static final int N = 2;
+	private static final double R = 32.768;
+	private static final int N = 2;        
 
-	private static double fitness(final double[] x) {
-		double value = A*N;
-		for (int i = 0; i < N; ++i) {
-			value += x[i]*x[i] - A*cos(2.0*PI*x[i]);
+
+
+
+//Ackley Class with parameters a, b, c, d
+	public Ackley(int a, double b, double c, double d){
+		this.a = a;
+		this.b = b;
+		this.c = c;
+		this.d = d;
+	}
+	
+	@Override
+	public double f(Point x) {
+		double sum1 = 0;
+		double sum2 = 0;
+		for (int i = 0; i < x.dim; i++) {
+			sum1 += Math.pow(x.p[i], 2);
+			sum2 += Math.cos(c*x.p[i]);
 		}
-
-		return value;
+		return a + Math.exp(1) + d - a*Math.exp(-b*Math.sqrt(sum1/x.dim)) - Math.exp(sum2/x.dim);
 	}
 
+
+        //
 	public static void main(final String[] args) {
 		final Engine<DoubleGene, Double> engine = Engine
 			.builder(
-				RastriginFunction::fitness,
+				Ackley::fitness,
 				// Codec for 'x' vector.
 				Codecs.ofVector(DoubleRange.of(-R, R), N))
 			.populationSize(500)
@@ -52,5 +72,6 @@ public class RastriginFunction {
 		System.out.println(statistics);
 		System.out.println(best);
 	}
+
+
 }
-///bhbbbbbbbbbbbbh
